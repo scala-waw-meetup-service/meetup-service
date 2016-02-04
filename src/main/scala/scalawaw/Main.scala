@@ -21,13 +21,20 @@ object Main extends App {
 
   val routes = {
     logRequestResult("foo") {
-      pathPrefix("events") {
+      path("events") {
         get {
           complete {
             Service(http, apiKey).listEvents
           }
         }
-      }
+      } ~
+        path("profile") {
+          get {
+            complete {
+              Service(http, apiKey).findProfile
+            }
+          }
+        }
     }
   }
 
