@@ -22,22 +22,16 @@ object Main extends App {
   val apiKey = "63962396461756829383a1f2f33b48"
   val http = Http(system)
 
-  def callMeetup: Future[String] = for {
-    groups <- Service(http, apiKey).listGroups
-    _ = println("token " + apiKey)
-    _ = println(s"groups $groups")
-  } yield groups
-
   val routes = {
     pathPrefix("groups") {
       get {
         complete {
-          callMeetup
+          Service(http, apiKey).listGroups
         }
       }
     }
   }
 
-  Http().bindAndHandle(routes, config.getString("http.interface"), config.getInt("http.port"))
+  http.bindAndHandle(routes, config.getString("http.interface"), config.getInt("http.port"))
 }
 
