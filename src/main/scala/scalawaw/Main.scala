@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
-object Main extends App with MyJsonProtocol {
+object Main extends App {
 
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
@@ -19,21 +19,20 @@ object Main extends App with MyJsonProtocol {
 
   val config = ConfigFactory.load()
   val logger = Logging(system, getClass)
+  val apiKey = "63962396461756829383a1f2f33b48"
+  val http = Http(system)
 
-  def callMeetup: Future[List[MeetupGroup]] = {
-    val apiKey = "63962396461756829383a1f2f33b48"
-    println("token " + apiKey)
-    val http = Http(system)
-    val groups = Service(http, apiKey).listGroups
-    println(s"groups $groups")
-    Future(groups) //TODO listGroups should return Future
-  }
+  def callMeetup: Future[String] = for {
+    groups <- Service(http, apiKey).listGroups
+    _ = println("token " + apiKey)
+    _ = println(s"groups $groups")
+  } yield groups
 
   val routes = {
     pathPrefix("groups") {
       get {
         complete {
-          "aaa"
+          callMeetup
         }
       }
     }
