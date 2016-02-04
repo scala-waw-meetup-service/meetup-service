@@ -11,10 +11,10 @@ object Main extends App {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
-  val token = args(0)
-  println("token " + token)
+  val apiKey = "63962396461756829383a1f2f33b48"
+  println("token " + apiKey)
   val http = Http(system)
-  val groups = Service(http, token).listGroups
+  val groups = Service(http, apiKey).listGroups
   println(s"groups $groups")
 }
 
@@ -29,10 +29,10 @@ object Const {
   val timeout = 70 seconds
 }
 
-case class Service(http: HttpExt, token: String) {
+case class Service(http: HttpExt, apiKey: String) {
   import MyJsonProtocol._
 
-  private def tokenParam: String = s"?key=$token"
+  private def tokenParam: String = s"?key=$apiKey"
 
   private def urlToJsonAst(inputUrl: String): JsValue = {
     implicit val system = ActorSystem()
