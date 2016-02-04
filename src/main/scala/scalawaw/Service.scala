@@ -40,7 +40,7 @@ case class Service(http: HttpExt, apiKey: String) {
     urlToResponseStr(s"${Const.meetupUrl}/2/open_events?key=${apiKey}&country=PL&city=Warsaw&time=1d,20d")
   }
 
-  def findProfile: Future[String] = {
-    urlToResponseStr(s"${Const.meetupUrl}/members/39866912?key=${apiKey}&fields=privacy,gender,profile")
+  def findProfile(id: String): Future[String] = {
+    urlToResponseStr(s"${Const.meetupUrl}/members/$id?key=${apiKey}&fields=privacy,gender,profile")
   }
 }

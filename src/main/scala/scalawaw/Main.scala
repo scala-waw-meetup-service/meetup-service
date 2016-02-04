@@ -29,9 +29,11 @@ object Main extends App {
         }
       } ~
         path("profile") {
-          get {
-            complete {
-              Service(http, apiKey).findProfile
+          parameters('id) { (id) =>
+            get {
+              complete {
+                Service(http, apiKey).findProfile(id)
+              }
             }
           }
         }
