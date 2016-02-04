@@ -37,6 +37,6 @@ case class Service(http: HttpExt, apiKey: String) {
   }
 
   def listEvents: Future[String] = {
-    urlToResponseStr(buildUrl("2/open_events") + "&country=PL&city=Warsaw&time=1d,20d")
+    urlToResponseStr(s"${Const.meetupUrl}/2/open_events?key=${apiKey}&country=PL&city=Warsaw&time=1d,20d")
   }
 }
