@@ -14,8 +14,6 @@ object Main extends App {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
-  //implicit val executor = system.dispatcher
-
   val config = ConfigFactory.load()
   val logger = Logging(system, getClass)
   val apiKey = "63962396461756829383a1f2f33b48"

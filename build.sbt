@@ -4,6 +4,8 @@ version := "1.0"
 
 scalaVersion := "2.11.7"
 
+enablePlugins(JavaAppPackaging)
+
 libraryDependencies ++= {
   val akkaStreamVersion = "2.0.1"
 
