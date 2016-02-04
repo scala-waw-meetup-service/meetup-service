@@ -6,9 +6,8 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
-import scala.concurrent.ExecutionContext.Implicits.global
 
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object Main extends App {
 
@@ -23,10 +22,12 @@ object Main extends App {
   val http = Http(system)
 
   val routes = {
-    pathPrefix("groups") {
-      get {
-        complete {
-          Service(http, apiKey).listGroups
+    logRequestResult("foo") {
+      pathPrefix("events") {
+        get {
+          complete {
+            Service(http, apiKey).listEvents
+          }
         }
       }
     }
