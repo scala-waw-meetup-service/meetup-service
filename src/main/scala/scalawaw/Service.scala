@@ -41,6 +41,6 @@ case class Service(http: HttpExt, apiKey: String) {
   }
 
   def findProfile: Future[String] = {
-    urlToResponseStr(s"${Const.meetupUrl}/members/39866912?key=${apiKey}")
+    urlToResponseStr(s"${Const.meetupUrl}/members/39866912?key=${apiKey}&fields=privacy,gender,profile")
   }
 }
