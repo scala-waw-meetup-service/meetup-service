@@ -1,5 +1,7 @@
 package scalawaw
 
+import java.time.{ZoneOffset, LocalDate}
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.HttpExt
 import akka.http.scaladsl.model.HttpRequest
@@ -36,8 +38,10 @@ case class Service(http: HttpExt, apiKey: String) {
     urlToResponseStr(buildUrl("groups/find"))
   }
 
-  def listEvents: Future[String] = {
-    urlToResponseStr(s"${Const.meetupUrl}/2/open_events?key=${apiKey}&country=PL&city=Warsaw&time=1d,20d")
+  def listEvents(city: String, since: String, to: String): Future[String] = {
+    val since2 = LocalDate.parse(since).atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli
+    val to2 = LocalDate.parse(to).plusDays(1).atStartOfDay().toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli
+    urlToResponseStr(s"${Const.meetupUrl}/2/open_events?key=${apiKey}&country=PL&city=${city}&time=${since2},${to2}")
   }
 
   def findProfile(id: String): Future[String] = {

@@ -22,9 +22,11 @@ object Main extends App {
   val routes = {
     logRequestResult("foo") {
       path("events") {
-        get {
-          complete {
-            Service(http, apiKey).listEvents
+        parameters('city, 'since, 'to) { (city, since, to) =>
+          get {
+            complete {
+              Service(http, apiKey).listEvents(city, since, to)
+            }
           }
         }
       } ~
