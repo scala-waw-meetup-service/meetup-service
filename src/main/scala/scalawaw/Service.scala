@@ -12,8 +12,8 @@ import scala.concurrent.duration._
 
 case class MeetupGroup(id: Long, name: String)
 
-object MyJsonProtocol extends DefaultJsonProtocol {
-  implicit val colorFormat = jsonFormat2(MeetupGroup)
+trait MyJsonProtocol extends DefaultJsonProtocol {
+  implicit val meetupGroupFormat = jsonFormat2(MeetupGroup)
 }
 
 object Const {
@@ -21,8 +21,7 @@ object Const {
   val timeout = 70 seconds
 }
 
-case class Service(http: HttpExt, apiKey: String) {
-  import MyJsonProtocol._
+case class Service(http: HttpExt, apiKey: String) extends MyJsonProtocol {
 
   private def tokenParam: String = s"?key=$apiKey"
 

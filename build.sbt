@@ -11,7 +11,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-stream-experimental"             % akkaStreamVersion,
     "com.typesafe.akka" %% "akka-http-experimental"               % akkaStreamVersion,
     "com.typesafe.akka" %% "akka-http-core-experimental"          % akkaStreamVersion,
-    "io.spray" %%  "spray-json" % "1.3.2"
+    "com.typesafe.akka" %% "akka-http-spray-json-experimental"    % akkaStreamVersion
   )
 }
 
