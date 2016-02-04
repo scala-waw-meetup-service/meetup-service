@@ -1,4 +1,4 @@
-name := "meetup-console-client"
+name := "meetup-service"
 
 version := "1.0"
 
