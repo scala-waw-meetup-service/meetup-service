@@ -1,22 +1,14 @@
-import akka.actor._
-import akka.stream.{Materializer, ActorMaterializer}
-import akka.http.scaladsl.{HttpExt, Http}
-import akka.http.scaladsl.model._
+package scalawaw
+
+import akka.actor.ActorSystem
+import akka.http.scaladsl.HttpExt
+import akka.http.scaladsl.model.HttpRequest
+import akka.stream.ActorMaterializer
 import akka.util.ByteString
-import scala.concurrent.Await
-import scala.concurrent.duration._
 import spray.json._
 
-object Main extends App {
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
-
-  val apiKey = "63962396461756829383a1f2f33b48"
-  println("token " + apiKey)
-  val http = Http(system)
-  val groups = Service(http, apiKey).listGroups
-  println(s"groups $groups")
-}
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 case class MeetupGroup(id: Long, name: String)
 
