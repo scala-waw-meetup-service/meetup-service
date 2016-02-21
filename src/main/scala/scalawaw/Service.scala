@@ -4,19 +4,18 @@ import java.time.{ZoneOffset, LocalDate}
 
 import akka.actor.ActorSystem
 import akka.event.Logging
-import akka.http.scaladsl.HttpExt
 import akka.http.scaladsl.model.HttpRequest
 import akka.stream.ActorMaterializer
 import akka.util.ByteString
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object Const {
   val meetupUrl = "https://api.meetup.com/"
+  val meetupHost = "api.meetup.com"
+  val meetupPort = 80
 }
 
-case class Service(http: HttpExt, apiKey: String) {
+case class Service(connection: MeetupConnection, apiKey: String) {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   val logger = Logging(system, getClass)
