@@ -7,13 +7,12 @@ scalaVersion := "2.11.7"
 enablePlugins(JavaAppPackaging)
 
 libraryDependencies ++= {
-  val akkaStreamVersion = "2.0.1"
+  val akkaVersion = "2.4.2"
 
   Seq(
-    "com.typesafe.akka" %% "akka-stream-experimental"             % akkaStreamVersion,
-    "com.typesafe.akka" %% "akka-http-experimental"               % akkaStreamVersion,
-    "com.typesafe.akka" %% "akka-http-core-experimental"          % akkaStreamVersion,
-    "com.typesafe.akka" %% "akka-http-spray-json-experimental"    % akkaStreamVersion
+    "com.typesafe.akka" %% "akka-stream"             % akkaVersion,
+    "com.typesafe.akka" %% "akka-http-core"          % akkaVersion,
+    "com.typesafe.akka" %% "akka-http-spray-json-experimental"    % akkaVersion
   )
 }
 
