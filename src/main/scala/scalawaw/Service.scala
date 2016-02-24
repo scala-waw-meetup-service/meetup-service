@@ -3,8 +3,9 @@ package scalawaw
 import java.time.{ZoneOffset, LocalDate}
 
 import akka.actor.ActorSystem
+import akka.pattern.ask
 import akka.event.Logging
-import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.model.{HttpResponse, HttpRequest}
 import akka.stream.ActorMaterializer
 import akka.util.ByteString
 import scala.concurrent.Future
@@ -25,7 +26,8 @@ case class Service(connection: MeetupConnection, apiKey: String) {
   private def urlToResponseStr(inputUrl: String): Future[String] = {
     logger.debug(s"getting from url $inputUrl")
     for {
-      response <- http.singleRequest(HttpRequest(uri = inputUrl))
+      responseAny <- connection.wrapActor ? HttpRequest(uri = inputUrl)
+      response = responseAny.asInstanceOf[HttpResponse]
       _ = logger.debug(s"status ${response.status}")
       responseContent <- response.entity.dataBytes.runFold(ByteString(""))(_ ++ _)
       responseStr = responseContent.decodeString("UTF8")

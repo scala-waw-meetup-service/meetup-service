@@ -18,6 +18,8 @@ object Main extends App {
   val logger = Logging(system, getClass)
   val apiKey = "63962396461756829383a1f2f33b48"
   val http = Http(system)
+  val wrapActor = system.actorOf(WrapActor.props())
+  val connection = MeetupConnection(http, wrapActor)
 
   val routes = {
     logRequestResult("foo") {
@@ -25,7 +27,7 @@ object Main extends App {
         parameters('city, 'since, 'to) { (city, since, to) =>
           get {
             complete {
-              Service(http, apiKey).listEvents(city, since, to)
+              Service(connection, apiKey).listEvents(city, since, to)
             }
           }
         }
@@ -34,7 +36,7 @@ object Main extends App {
           parameters('id) { (id) =>
             get {
               complete {
-                Service(http, apiKey).findProfile(id)
+                Service(connection, apiKey).findProfile(id)
               }
             }
           }
