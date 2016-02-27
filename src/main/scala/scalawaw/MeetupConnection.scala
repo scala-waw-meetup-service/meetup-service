@@ -3,11 +3,12 @@ package scalawaw
 import akka.actor._
 import akka.http.scaladsl.HttpExt
 import akka.http.scaladsl.model.{HttpResponse, HttpRequest}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
-import akka.stream.scaladsl.{Sink, Source}
+import akka.stream._
+import akka.stream.scaladsl.{ZipWith, GraphDSL, Sink, Source}
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Try
+import scala.concurrent.duration._
 
 case class SourceRef(actor: ActorRef)
 case object CompleteMsg
@@ -16,11 +17,13 @@ case class MeetupConnection(http: HttpExt, wrapActor: ActorRef) {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
-  val connection = http.newHostConnectionPool[Long](Const.meetupHost, Const.meetupPort)
+  val connection = http
+    .newHostConnectionPool[Long](Const.meetupHost, Const.meetupPort)
 
   def runConnection() = Future {
-    val source = Source.actorRef[(HttpRequest, Long)](1, OverflowStrategy.fail)
+    val actorSource = Source.actorRef[(HttpRequest, Long)](1, OverflowStrategy.fail)
       .mapMaterializedValue(wrapActor ! SourceRef(_))
+    val source = Throttle.zipWithThrottleTick(actorSource)
     val sink = Sink.actorRef[(Try[HttpResponse], Long)](wrapActor, CompleteMsg)
     connection.runWith(source, sink)
   }
