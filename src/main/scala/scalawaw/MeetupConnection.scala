@@ -26,21 +26,36 @@ case class MeetupConnection(http: HttpExt, wrapActor: ActorRef) {
   }
 }
 
+object MeetupConnection {
+  def create(http: HttpExt, wrapActor: ActorRef): MeetupConnection = {
+    val conn = MeetupConnection(http, wrapActor)
+    conn.runConnection()
+    conn
+  }
+}
+
 object WrapActor {
   def props() = Props(classOf[WrapActor])
 }
 class WrapActor extends Actor with ActorLogging {
+  var requestIdSeq: Long = 0
   var sourceActorOpt: Option[ActorRef] = None
   val requestsSenders = scala.collection.mutable.Map[Long, ActorRef]()
 
   def sourceActor = sourceActorOpt.get
 
+  def nextId = {
+    requestIdSeq += 1
+    requestIdSeq
+  }
+
   def receive: Receive = {
     case SourceRef(actor) => sourceActorOpt = Some(actor)
-    case (request: HttpRequest, id: Long) =>
-      sourceActor ! request
+    case request: HttpRequest =>
+      val id = nextId
+      sourceActor ! (request, id)
       requestsSenders.put(id, sender())
-    case (responseTry: Try[HttpResponse], id: Long) =>
+    case (responseTry: Try[_], id: Long) =>
       responseTry.map(response => requestsSenders.get(id).foreach(sndr => sndr ! response))
   }
 }

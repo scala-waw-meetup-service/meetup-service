@@ -19,7 +19,7 @@ object Main extends App {
   val apiKey = "63962396461756829383a1f2f33b48"
   val http = Http(system)
   val wrapActor = system.actorOf(WrapActor.props())
-  val connection = MeetupConnection(http, wrapActor)
+  val connection = MeetupConnection.create(http, wrapActor)
 
   val routes = {
     logRequestResult("foo") {

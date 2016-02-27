@@ -7,8 +7,10 @@ import akka.pattern.ask
 import akka.event.Logging
 import akka.http.scaladsl.model.{HttpResponse, HttpRequest}
 import akka.stream.ActorMaterializer
-import akka.util.ByteString
+import akka.util.{Timeout, ByteString}
 import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object Const {
   val meetupUrl = "https://api.meetup.com/"
@@ -19,6 +21,7 @@ object Const {
 case class Service(connection: MeetupConnection, apiKey: String) {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
+  implicit val timeout = Timeout(120 seconds)
   val logger = Logging(system, getClass)
 
   private def tokenParam: String = s"?key=$apiKey"
